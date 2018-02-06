@@ -1,0 +1,49 @@
+axiom: ~~(a /\ ~a) => (a /\ ~a) end.
+
+
+goal AND_2: ((p /\ q) => r) => (p => (q => r))
+proof
+	[(p /\ q) => r:
+		[p: 
+			[q: 
+				p /\ q; 
+				r
+			]; 
+			q => r
+		]; 
+		p => q => r
+	];
+((p /\ q) => r) => p => q => r
+end.
+
+goal AND_2: ((p /\ q) => r) => (p => (q => r))
+proof
+	[(p /\ q) => r:
+		[p: 
+			[q: 
+				p /\ q; 
+				r
+			]; 
+			q => r
+		]; 
+		p => q => r
+	];
+((p /\ q) => r) => p => q => r
+end.
+
+axiom: ~~(a /\ ~a) => (a /\ ~a) end.
+
+goal AND_2: ((p /\ q) => r) => (p => (q => r))
+proof
+	[(p /\ q) => r:
+		[p: 
+			[q: 
+				p /\ q; 
+				r
+			]; 
+			q => r
+		]; 
+		p => q => r
+	];
+((p /\ q) => r) => p => q => r
+end.
