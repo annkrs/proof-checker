@@ -1,49 +1,19 @@
 axiom: ~~(a /\ ~a) => (a /\ ~a) end.
 
 
-goal AND_2: ((p /\ q) => r) => (p => (q => r))
+goal OR_1: q => q \/ p
 proof
-	[(p /\ q) => r:
-		[p: 
-			[q: 
-				p /\ q; 
-				r
-			]; 
-			q => r
-		]; 
-		p => q => r
+	[q:
+		q \/ p
 	];
-((p /\ q) => r) => p => q => r
+	q => q \/ p
 end.
 
-goal AND_2: ((p /\ q) => r) => (p => (q => r))
+goal EQ: p <=> p
 proof
-	[(p /\ q) => r:
-		[p: 
-			[q: 
-				p /\ q; 
-				r
-			]; 
-			q => r
-		]; 
-		p => q => r
-	];
-((p /\ q) => r) => p => q => r
+[p: p];
+p <=> p
 end.
 
 axiom: ~~(a /\ ~a) => (a /\ ~a) end.
 
-goal AND_2: ((p /\ q) => r) => (p => (q => r))
-proof
-	[(p /\ q) => r:
-		[p: 
-			[q: 
-				p /\ q; 
-				r
-			]; 
-			q => r
-		]; 
-		p => q => r
-	];
-((p /\ q) => r) => p => q => r
-end.
