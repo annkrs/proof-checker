@@ -2,6 +2,11 @@ open List
 open Common
 
 
+(* TODO
+-change result type to option 
+-elimination rule for 'F' -> everything is achievable *)
+
+
 (* AUXILIARY FUNCTIONS *)
 
 let isFrame (comp:component) = 
@@ -40,7 +45,6 @@ let allImps (env:component list) =
 	(* returns list of all Imp from environment *) 
 	List.filter isImp env
 
-
 (* DEDUCING *)
 
 let rec isDerivable (axioms:component list) (expr:component) (env:component list) = 
@@ -76,11 +80,24 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 				existsFrame x y env 
 			| _ -> failwith "tried to check if component was introduced; received component is a frame" in 
 
-		let isResultOfElimination = 
-			(* checks if expression is obtained from connective elimination *)
-			false in
+		let rec isResultOfElimination (lst:component list) = 
+			(* checks if expression is obtained from connective elimination by traversing environment and trying to apply elimination rule to each of elements *)
 
-		wasIntroduced || isResultOfElimination in 
+			let eliminatesConnective (comp:component) = 
+				(* tries to apply elimination rules to elements of environment *)
+				match comp with 
+				| Con (x, y) -> x = expr || y = expr
+			 	| Imp (x, y) -> List.mem x env && y = expr
+			 	| _ -> failwith "not implemented" in
+
+			match env with 
+			| h :: t -> 
+				if eliminatesConnective h
+					then true
+				else isResultOfElimination t 
+			| [] -> false in
+
+		wasIntroduced || isResultOfElimination env in (* end of isAchievable *)
 
 	(List.mem expr env) || (existsSimilarAxiom axioms expr) || (isAchievable expr env)
 
