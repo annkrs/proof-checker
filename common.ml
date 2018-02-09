@@ -9,6 +9,18 @@ type component =
 	| Imp of component * component
 	| Frame of component * (component list)
 
+let isSome (elem:component list option) = 
+	(* checks whether elem has a value *)
+	match elem with
+	| Some _ -> true 
+	| None -> false
+
+let get (elem:component list option) = 
+	(* obtains the value inside Some *)
+	match elem with
+	| Some x -> x
+	| None -> failwith "treid to obtain value inside Some; received item is a None"
+
 let rec componentToString (comp:component) = 
 	(* creates string representation of component *)
 	match comp with 

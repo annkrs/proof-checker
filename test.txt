@@ -15,5 +15,11 @@ proof
 p <=> p
 end.
 
+goal EQB: p => p
+proof
+[p: p];
+p <=> p
+end.
+
 axiom: ~~(a /\ ~a) => (a /\ ~a) end.
 

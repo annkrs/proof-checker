@@ -35,8 +35,8 @@ let rec checkAllProofs lexbuf (env:component list) =
 			printAxiom (goal); 
 			checkAllProofs t (goal :: env)
 		| (identifier, goal, proof) -> 
-			if checkProof env h
-				then checkAllProofs t (goal :: env)
+			if (isSome (checkProof env h)) then 
+				checkAllProofs t (goal :: env)
 			else 
 				checkAllProofs t env
 
