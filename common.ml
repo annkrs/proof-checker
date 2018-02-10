@@ -39,7 +39,6 @@ let rec componentToString (comp:component) =
 		"(" ^ (componentToString x) ^ " => " ^ (componentToString y) ^ ")"
 	| Frame (x, y) ->
 		"[" ^ (componentToString x) ^ ": " ^ String.concat ", " (List.map (fun v -> componentToString v) y) ^ "] "
-	(*| _ -> failwith "tried to create string representation of a component; non-framed component expected"*)
 
 let printAxiom (goal:component) = 
 	(* prints Axiom with its goal *)

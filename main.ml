@@ -18,7 +18,7 @@ let printPosition outx lexbuf =
 		pos.pos_lnum (pos.pos_cnum - pos.pos_bol + 1)
 
 let parse lexbuf =
-	(* parses lexer output according to given grammar decribed in parser.mly file; prints an error message if read test is incorrect *)
+	(* parses lexer output according to given grammar described in parser.mly file; prints an error message if read test is incorrect *)
 	try Parser.prog Lexer.read lexbuf with
 	| SyntaxError msg ->
 		fprintf stderr "%a: %s\n" printPosition lexbuf msg; []

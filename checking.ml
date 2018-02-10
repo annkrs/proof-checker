@@ -1,9 +1,8 @@
 open List
 open Common
 
-(* TODO: 
--or elimination
--axioms *)
+
+(* TODO: AXIOMS *)
 
 
 (* AUXILIARY FUNCTIONS *)
@@ -12,7 +11,7 @@ let allNegs (env:component list) =
 	(* returns list of all negations from environment *)
 
 	let isNeg (comp:component) = 
-		(* checks if component is a negation *) 
+		(* checks if component is a Neg *) 
 		match comp with 
 		| Neg (_) -> true 
 		| _ -> false in
@@ -23,7 +22,7 @@ let allFrames (env:component list) =
 	(* returns list of all frames from environment *) 
 
 	let isFrame (comp:component) = 
-		(* checks if component is a frame *)
+		(* checks if component is a Frame *)
 		match comp with
 			| Frame (_, _) -> true
 			| _ -> false in
@@ -35,7 +34,7 @@ let framesEndingWithComponent (comp:component) (env:component list) =
 	List.filter (fun x -> 
 		match x with
 		| Frame (a, fp) -> (List.hd (List.rev fp)) = comp
-		| _ -> failwith "tried to find last element of frame proof; received component is not a frame") 
+		| _ -> failwith "tried to find last element of frame proof; received component is not a Frame") 
 		(allFrames env)
 
 let existsFrame (assum:component) (last:component) (env:component list) =
@@ -43,18 +42,30 @@ let existsFrame (assum:component) (last:component) (env:component list) =
 	List.exists (fun x -> 
 		match x with
 		| Frame (a, fp) -> a = assum
-		| _ -> failwith "tried to search frames; received component is not a frame") 
+		| _ -> failwith "tried to search frames; received component is not a Frame") 
 		(framesEndingWithComponent last env)
 
 let allImps (env:component list) =
 	(* returns list of all implications from environment *) 
 
 	let isImp (comp:component) = 
-		(* checks if component is an implication *)
+		(* checks if component is an Imp *)
 		match comp with
 			| Imp (_, _) -> true
 			| _ -> false in
+
 	List.filter isImp env
+
+let allDises (env:component list) =
+	(* returns list of all disjunctions from environment *) 
+
+	let isDis (comp:component) = 
+		(* checks if component is a Dis *)
+		match comp with
+			| Dis (_, _) -> true
+			| _ -> false in
+
+	List.filter isDis env
 
 
 (* DEDUCING *)
@@ -63,7 +74,7 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 	(* tries to derive by checking if exists similar axiom or expression is achievable using inference rules *)
 
 	let existsSimilarAxiom (axioms:component list) (expr:component) = 
-		(* checks if in axioms (list of axioms read so far from input file) exists expression similar ("isomorphic") to given expr*)
+		(* checks if in axioms (list of axioms read so far from input file) exists expression similar ("isomorphic") to given expr *)
 		false in
 
 	let isAchievable (expr:component) (env:component list) = 
@@ -77,7 +88,7 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 				List.exists (fun v -> 
 					match v with 
 					| Neg (x) -> List.mem x env
-					| _ -> failwith "tried to introduce negation; negation component expected") 
+					| _ -> failwith "tried to introduce negation; Neg component expected") 
 				(allNegs env)
 			| Var (x) -> false
 			| Neg (Neg (x)) -> 
@@ -101,11 +112,10 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 			| _ -> false in 
 
 		let rec isResultOfElimination (lst:component list) = 
-			(* checks if expression is obtained from connective elimination by traversing environment and trying to apply elimination rule to each of elements *)
+			(* checks if expression is obtained from connective elimination by traversing environment and trying to apply elimination rule to each element *)
 
 			let eliminatesConnective (comp:component) = 
 				(* tries to apply elimination rules to elements of environment *)
-				(print_string (debugMessage env comp expr)); 
 				match comp with 
 				| False -> true
 				| Neg (Neg (x)) -> 
@@ -114,6 +124,11 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 					expr = False && List.mem x env
 				| Con (x, y) -> 
 					expr = x || expr = y
+				| Dis (x, y) ->
+					List.exists (fun v -> 
+					match v with 
+					| Dis (x, y) -> existsFrame x expr env && existsFrame y expr env
+					| _ -> failwith "tried to eliminate disjunction; Dis component expected") (allDises env)
 				| Bic (x, y) -> 
 					(expr = x && List.mem y env) 						||
 					(expr = y && List.mem x env) 						||
@@ -135,7 +150,7 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 			| [] -> false in
 
 		wasIntroduced || isResultOfElimination env in (* end of isAchievable *)
-
+	
 	(List.mem expr env) || (existsSimilarAxiom axioms expr) || (isAchievable expr env)
 
 

@@ -1,76 +1,6 @@
 axiom: ~~(a /\ ~a) => (a /\ ~a) end.
 
 
-goal OR_1: q => q \/ p
-proof
-	[q:
-		q \/ p
-	];
-	q => q \/ p
-end.
-
-
-goal EQ: p <=> p
-proof
-[p: p];
-p <=> p
-end.
-
-
-goal DOUBLE_NEG_2: p <=> ~~p	
-proof
-	[p:
-	[~p: F];
-	~~p];
-	p => ~~p;
-	[~~p:
-	p];
-	~~p => p;
-	p <=> ~~p	    
-end.
-
-
-goal AND_2: ~(p /\ ~p)
-proof
-	[p /\ ~p:
-		p;
-		~p;
-		F
-	];
-	~(p /\ ~p)
-end.
-
-
-goal IFF_1: p <=> ~~p	
-proof
-	[p:
-		[~p: 
-			F
-		];
-	~~p
-	];
-	p => ~~p;
-	[~~p:
-		p
-	];
-	~~p => p;
-	p <=> ~~p	    
-end.
-
-
-goal IMP_I2: (p => ~p) => ~p 
-proof
-	[p => ~p:
-		[p: 
-			~p;
-			F
-		];
-		~p
-	];
-	(p => ~p) => ~p 
-end.
-
-
 goal FALSE_1: (p => ~p) => ~p 
 proof
 	[p => ~p:
@@ -82,7 +12,6 @@ proof
 	];
 	(p => ~p) => ~p 
 end.
-
 
 
 goal FALSE_2: ~(p /\ ~p)
@@ -116,4 +45,228 @@ proof
 		~p /\ ~q
 	];
 	~(p \/ q) => ~p /\ ~q
+end.
+
+
+goal DOUBLE_NEG_1: ~~p => p
+proof
+	[~~p: p];
+	~~p => p
+end.
+
+
+goal DOUBLE_NEG_2: p <=> ~~p	
+proof
+	[p:
+	[~p: F];
+	~~p];
+	p => ~~p;
+	[~~p:
+	p];
+	~~p => p;
+	p <=> ~~p	    
+end.
+
+
+goal AND_1: p \/ (q /\ r) => (p \/ q) /\ (p \/ r)
+proof
+	[p \/ (q /\ r):
+		[p:
+			p;
+			(p \/ q);
+			(p \/ r);
+			(p \/ q) /\ (p \/ r)
+		];
+		[q /\ r:
+			q;
+			(q \/ p);
+			(p \/ q);
+			r;
+			(r \/ p);
+			(p \/ r);
+			(p \/ q) /\ (p \/ r)
+		];
+		(p \/ q) /\ (p \/ r)
+	];
+	p \/ (q /\ r) => (p \/ q) /\ (p \/ r)
+end.
+
+
+goal AND_2: ((p /\ q) => r) => (p => (q => r))
+proof
+	[(p /\ q) => r:
+		[p: 
+			[q: 
+				p /\ q; 
+				r
+			]; 
+			q => r
+		]; 
+		p => q => r
+	];
+((p /\ q) => r) => p => q => r
+end.
+
+
+goal AND_1: (p => (q => r)) => (p /\ q => r)
+proof
+	[p => (q => r):
+		[p /\ q:
+			p;
+			q;
+			q => r;
+			r
+		];
+		(p /\ q => r)
+	];
+	(p => (q => r)) => (p /\ q => r)
+end.
+
+
+goal AND_2: ~(p /\ ~p)
+proof
+	[p /\ ~p:
+		p;
+		~p;
+		F
+	];
+	~(p /\ ~p)
+end.
+
+
+goal OR_1: q => q \/ p
+proof
+	[q:
+		q \/ p
+	];
+	q => q \/ p
+end.
+
+
+goal OR_2: p /\ q => q /\ p
+proof
+	[p /\ q:
+ 	q;
+ 	p;
+ 	q /\ p];
+	p /\ q => q /\ p
+end.
+
+
+goal OR_3: p \/ (q /\ r) => (p \/ q) /\ (p \/ r)
+proof
+	[p \/ (q /\ r):
+		[p:
+			p;
+			(p \/ q);
+			(p \/ r);
+			(p \/ q) /\ (p \/ r)
+		];
+		[q /\ r:
+			q;
+			(q \/ p);
+			(p \/ q);
+			r;
+			(r \/ p);
+			(p \/ r);
+			(p \/ q) /\ (p \/ r)
+		];
+		(p \/ q) /\ (p \/ r)
+	];
+	p \/ (q /\ r) => (p \/ q) /\ (p \/ r)
+end.
+
+
+goal IMP_I1: a => b => a
+proof
+	[a : [ b : a];
+	b => a];
+	a => b => a
+end.
+
+
+goal IMP_I2: (p => ~p) => ~p 
+proof
+	[p => ~p:
+		[p: 
+			~p;
+			F
+		];
+		~p
+	];
+	(p => ~p) => ~p 
+end.
+
+
+goal IMP_E1: ((p /\ q) => r) => (p => (q => r))
+proof
+	[(p /\ q) => r:
+		[p: 
+			[q: 
+				p /\ q; 
+				r
+			]; 
+			q => r
+		]; 
+		p => q => r
+	];
+((p /\ q) => r) => p => q => r
+end.
+
+
+goal IMP_E2: (p => (q => r)) => (p /\ q => r)
+proof
+	[p => (q => r):
+		[p /\ q:
+			p;
+			q;
+			q => r;
+			r
+		];
+		(p /\ q => r)
+	];
+	(p => (q => r)) => (p /\ q => r)
+end.
+
+
+goal IFF_1: p <=> ~~p	
+proof
+	[p:
+		[~p: 
+			F
+		];
+	~~p
+	];
+	p => ~~p;
+	[~~p:
+		p
+	];
+	~~p => p;
+	p <=> ~~p	    
+end.
+
+goal EQ: p <=> p
+proof
+[p: p];
+p <=> p
+end.
+
+
+
+goal IFF_2: p <=> p
+proof
+	[p: 
+		p]; 
+	p => p; 
+	p <=> p 
+end.
+
+
+goal IFF_3: (p => q) <=> (p => q)
+proof
+	[p => q: 
+		p => q
+	];
+	(p => q) => (p => q);
+	(p => q) <=> (p => q)
 end.
