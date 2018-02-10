@@ -2,10 +2,6 @@ open List
 open Common
 
 
-(* TODO
--elimination rule for 'F' -> everything is achievable *)
-
-
 (* AUXILIARY FUNCTIONS *)
 
 let allFrames (env:component list) =
@@ -62,6 +58,7 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 			(* checks possibility to introduce connective from environment *)
 			match expr with 
 			| True -> true 
+			| Var (x) -> false
 			| Neg (Neg (x)) -> 
 				isDerivable axioms x env
 			| Neg (x) -> 
@@ -86,13 +83,18 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 
 			let eliminatesConnective (comp:component) = 
 				(* tries to apply elimination rules to elements of environment *)
-				match comp with 
-				| Con (x, y) -> x = expr || y = expr
-			 	| Imp (x, y) -> List.mem x env && y = expr
-			 	| _ -> failwith "not implemented" in
-			 	(* found 'F' -> everything is achievable *)
 
-			match env with 
+				let envToString = String.concat ", " (List.map (fun x -> componentToString x) lst) in
+				let msg = "env: " ^ envToString ^ " || comp: " ^ (componentToString comp) ^ " || expr: " ^ (componentToString expr) ^ "\n\n"in
+
+				(print_string msg ); 
+				match comp with 
+				| False -> true
+				| Con (x, y) -> x = expr || y = expr
+				| Imp (x, y) -> List.mem x env && y = expr
+				| _ -> false in
+
+			match lst with 
 			| h :: t -> 
 				if eliminatesConnective h then 
 					true

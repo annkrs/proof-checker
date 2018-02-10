@@ -9,11 +9,13 @@ proof
 	q => q \/ p
 end.
 
+
 goal EQ: p <=> p
 proof
 [p: p];
 p <=> p
 end.
+
 
 goal EQB: p => p
 proof
@@ -21,5 +23,16 @@ proof
 p <=> p
 end.
 
+
 axiom: ~~(a /\ ~a) => (a /\ ~a) end.
 
+
+
+goal OR_2: p /\ q => q /\ p
+proof
+	[p /\ q:
+ 	q;
+ 	p;
+ 	q /\ p];
+	p /\ q => q /\ p
+end.
