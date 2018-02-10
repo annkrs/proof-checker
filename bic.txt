@@ -1,0 +1,42 @@
+goal BIC_1: p <=> ~~p	
+proof
+	[p:
+		[~p: 
+			F
+		];
+	~~p
+	];
+	p => ~~p;
+	[~~p:
+		p
+	];
+	~~p => p;
+	p <=> ~~p	    
+end.
+
+
+goal BIC_2: p <=> p
+proof
+[p: p];
+p <=> p
+end.
+
+
+goal BIC_3: p <=> p
+proof
+	[p: 
+		p]
+	; 
+	p => p; 
+	p <=> p 
+end.
+
+
+goal BIC_4: (p => q) <=> (p => q)
+proof
+	[p => q: 
+		p => q
+	];
+	(p => q) => (p => q);
+	(p => q) <=> (p => q)
+end.

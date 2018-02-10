@@ -1,0 +1,65 @@
+goal NEG_1: (p => ~p) => ~p 
+proof
+	[p => ~p:
+		[p: 
+			~p;
+			F
+		];
+		~p
+	];
+	(p => ~p) => ~p 
+end.
+
+
+goal NEG_2: ~(p /\ ~p)
+proof
+	[p /\ ~p:
+		p;
+		~p;
+		F
+	];
+	~(p /\ ~p)
+end.
+
+
+goal NEG_3: ~(p \/ q) => ~p /\ ~q
+proof
+	[~(p \/ q):
+		[p:
+			p;
+			p \/ q;
+			~(p \/ q);
+			F
+		];
+		[q:
+			q;
+			p \/ q;
+			~(p \/ q);
+			F
+		];
+		~p;
+		~q;
+		~p /\ ~q
+	];
+	~(p \/ q) => ~p /\ ~q
+end.
+
+
+goal DOUBLE_NEG_1: ~~p => p
+proof
+	[~~p: p];
+	~~p => p
+end.
+
+
+goal DOUBLE_NEG_2: p <=> ~~p	
+proof
+	[p:
+	[~p: F];
+	~~p];
+	p => ~~p;
+	[~~p:
+	p];
+	~~p => p;
+	p <=> ~~p	    
+end.

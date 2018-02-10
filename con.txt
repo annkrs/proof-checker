@@ -1,0 +1,64 @@
+goal CON_1: p \/ (q /\ r) => (p \/ q) /\ (p \/ r)
+proof
+	[p \/ (q /\ r):
+		[p:
+			p;
+			(p \/ q);
+			(p \/ r);
+			(p \/ q) /\ (p \/ r)
+		];
+		[q /\ r:
+			q;
+			(q \/ p);
+			(p \/ q);
+			r;
+			(r \/ p);
+			(p \/ r);
+			(p \/ q) /\ (p \/ r)
+		];
+		(p \/ q) /\ (p \/ r)
+	];
+	p \/ (q /\ r) => (p \/ q) /\ (p \/ r)
+end.
+
+
+goal CON_2: ((p /\ q) => r) => (p => (q => r))
+proof
+	[(p /\ q) => r:
+		[p: 
+			[q: 
+				p /\ q; 
+				r
+			]; 
+			q => r
+		]; 
+		p => q => r
+	];
+((p /\ q) => r) => p => q => r
+end.
+
+
+goal CON_3: (p => (q => r)) => (p /\ q => r)
+proof
+	[p => (q => r):
+		[p /\ q:
+			p;
+			q;
+			q => r;
+			r
+		];
+		(p /\ q => r)
+	];
+	(p => (q => r)) => (p /\ q => r)
+end.
+
+
+goal CON_4: ~(p /\ ~p)
+proof
+	[p /\ ~p:
+		p;
+		~p;
+		F
+	];
+	~(p /\ ~p)
+end.

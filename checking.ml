@@ -2,9 +2,6 @@ open List
 open Common
 
 
-(* TODO: AXIOMS *)
-
-
 (* AUXILIARY FUNCTIONS *)
 
 let allNegs (env:component list) = 
@@ -75,7 +72,63 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 
 	let existsSimilarAxiom (axioms:component list) (expr:component) = 
 		(* checks if in axioms (list of axioms read so far from input file) exists expression similar ("isomorphic") to given expr *)
-		false in
+
+		let removeDups (vars:string list) = 
+			(* removes duplicates from variables list *)
+			let rec aux lst acc = 
+				match lst with 
+				| [] -> acc
+				| h :: t -> if List.mem h acc then aux t acc else aux t (acc @ [h]) in 
+
+			aux vars [] in
+
+		let extractVariables (expr:component) = 
+			(* extracts unique variables from given expression *)
+			let rec aux expr =
+				match expr with
+				| True
+				| False -> []
+				| Var x -> [x]
+				| Neg x -> aux x
+				| Con (x, y)
+				| Dis (x, y)
+				| Bic (x, y) 
+				| Imp (x, y) -> aux x @ aux y
+				| _ -> failwith "tried to remove duplicates; invalid component occured" in
+
+			removeDups (aux expr) in 
+
+		let mapping (vars:string list) = 
+			(* creates mapping: number->variable *)
+			List.mapi (fun x y -> (string_of_int x, y)) vars in
+
+		let findMapping (letter:string) (mapp:(string * string) list) = 
+			(* searches mapping mapp to find the number of the letter *)
+			let rec aux lst =
+				match lst with 
+				| [] -> failwith "tried to find mapping for letter"
+				| (no, lt) :: t -> if lt = letter then no else aux t in
+				 
+			aux mapp in
+
+		let reducedForm (expr:component) = 
+			(* creates a new component based on expr with number corresponding to the letter *)
+			let mapp = mapping (extractVariables expr) in
+			let rec aux e = 
+				match e with 
+				| True -> True 
+				| False -> False
+				| Var x -> Var (findMapping x mapp)
+				| Neg x -> Neg (aux x)
+				| Con (x, y) -> Con (aux x, aux y)
+				| Dis (x, y) -> Dis (aux x, aux y)
+				| Bic (x, y) -> Bic (aux x, aux y)
+				| Imp (x, y) -> Imp (aux x, aux y)
+				| _ -> failwith "tried to create reduced form of expression" in 
+
+			aux expr in 
+		
+		List.exists (fun x -> (reducedForm x) = (reducedForm expr)) axioms in
 
 	let isAchievable (expr:component) (env:component list) = 
 		(* checks whether is it possible to deduce expression from environment using inference rules *)
@@ -83,7 +136,6 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 		let wasIntroduced = 
 			(* checks possibility to introduce connective from environment *)
 			match expr with 
-			| True -> true 
 			| False -> 
 				List.exists (fun v -> 
 					match v with 
@@ -91,8 +143,6 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 					| _ -> failwith "tried to introduce negation; Neg component expected") 
 				(allNegs env)
 			| Var (x) -> false
-			| Neg (Neg (x)) -> 
-				isDerivable axioms x env
 			| Neg (x) -> 
 				existsFrame x False env || (* modus tollens below *)
 					List.exists (fun v -> 
@@ -100,6 +150,8 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 						| Imp (x, y) -> List.mem (Neg (y)) env
 						| _ -> failwith "tried to check modus tollens; received component is not an Imp") 
 					(allImps env)
+			| Neg (Neg (x)) -> 
+				List.mem x env
 			| Con (x, y) -> 
 				isDerivable axioms x env && isDerivable axioms y env
 			| Dis (x, y) -> 
@@ -109,6 +161,7 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 				isDerivable axioms (Imp (x, y)) env && isDerivable axioms (Imp (y, x)) env
 			| Imp (x, y) -> 
 				existsFrame x y env 
+			| True -> true 
 			| _ -> false in 
 
 		let rec isResultOfElimination (lst:component list) = 

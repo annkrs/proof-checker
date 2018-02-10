@@ -1,4 +1,4 @@
-TEST = test
+TEST = axioms
 
 all:
 	ocamlbuild -use-menhir -r -tag thread -use-ocamlfind -pkg core main.native

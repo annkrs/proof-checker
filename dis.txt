@@ -1,0 +1,41 @@
+goal DIS_1: q => q \/ p
+proof
+	[q:
+		q \/ p
+	];
+	q => q \/ p
+end.
+
+
+goal DIS_2: p /\ q => q /\ p
+proof
+	[p /\ q:
+ 	q;
+ 	p;
+ 	q /\ p];
+	p /\ q => q /\ p
+end.
+
+
+goal DIS_3: p \/ (q /\ r) => (p \/ q) /\ (p \/ r)
+proof
+	[p \/ (q /\ r):
+		[p:
+			p;
+			(p \/ q);
+			(p \/ r);
+			(p \/ q) /\ (p \/ r)
+		];
+		[q /\ r:
+			q;
+			(q \/ p);
+			(p \/ q);
+			r;
+			(r \/ p);
+			(p \/ r);
+			(p \/ q) /\ (p \/ r)
+		];
+		(p \/ q) /\ (p \/ r)
+	];
+	p \/ (q /\ r) => (p \/ q) /\ (p \/ r)
+end.

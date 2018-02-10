@@ -52,6 +52,6 @@ let debugMessage (env:component list) (comp:component) (expr:component) =
 	(* creates string representation of actual state of env *)
 	let envToString = 
 		String.concat ", " (List.rev (List.map (fun x -> componentToString x) env)) in
-	"env: " ^ envToString ^ "\ncomp: " ^ (componentToString comp) ^ 
+	"ELI:\nenv: " ^ envToString ^ "\ncomp: " ^ (componentToString comp) ^ 
 	" \nexpr: " ^ (componentToString expr) ^ "\n\n"
 	

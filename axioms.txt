@@ -1,0 +1,35 @@
+axiom: ~~(a \/ ~a) => (a \/ ~a) end.
+
+
+goal MID: p \/ ~p
+proof
+	[ ~(p \/ ~p):
+		[p:
+			p;
+			(p \/ ~p);
+			F
+		];
+		~p;
+		p \/ ~p;
+		F
+	];
+	~~(p \/ ~p);
+	~~(p \/ ~p) => (p \/ ~p);
+	p \/ ~p
+end.
+
+
+axiom: q \/ ~q end.
+
+
+goal CLA: (~p => p) => p
+proof
+	[ ~p => p:
+		p \/ ~p;
+		[~p : p];
+		[p : p];
+		p
+	];
+	(~p => p) => p
+
+end.
