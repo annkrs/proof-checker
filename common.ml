@@ -37,7 +37,9 @@ let rec componentToString (comp:component) =
 		"(" ^ (componentToString x) ^ " <=> " ^ (componentToString y) ^ ")"
 	| Imp (x, y) -> 
 		"(" ^ (componentToString x) ^ " => " ^ (componentToString y) ^ ")"
-	| _ -> failwith "tried to create string representation of a component; non-framed component expected"
+	| Frame (x, y) ->
+		"[" ^ (componentToString x) ^ ": " ^ String.concat ", " (List.map (fun v -> componentToString v) y) ^ "] "
+	(*| _ -> failwith "tried to create string representation of a component; non-framed component expected"*)
 
 let printAxiom (goal:component) = 
 	(* prints Axiom with its goal *)
@@ -46,4 +48,11 @@ let printAxiom (goal:component) =
 let printProof (goal:component) =
 	(* prints proof's goal *)
 	print_string ("goal: " ^ (componentToString goal) ^ "\n\n")
+
+let debugMessage (env:component list) (comp:component) (expr:component) = 
+	(* creates string representation of actual state of env *)
+	let envToString = 
+		String.concat ", " (List.rev (List.map (fun x -> componentToString x) env)) in
+	"env: " ^ envToString ^ "\ncomp: " ^ (componentToString comp) ^ 
+	" \nexpr: " ^ (componentToString expr) ^ "\n\n"
 	

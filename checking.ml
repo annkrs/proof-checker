@@ -1,8 +1,23 @@
 open List
 open Common
 
+(* TODO: 
+-or elimination
+-axioms *)
+
 
 (* AUXILIARY FUNCTIONS *)
+
+let allNegs (env:component list) = 
+	(* returns list of all negations from environment *)
+
+	let isNeg (comp:component) = 
+		(* checks if component is a negation *) 
+		match comp with 
+		| Neg (_) -> true 
+		| _ -> false in
+
+	List.filter isNeg env
 
 let allFrames (env:component list) =
 	(* returns list of all frames from environment *) 
@@ -58,40 +73,57 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 			(* checks possibility to introduce connective from environment *)
 			match expr with 
 			| True -> true 
+			| False -> 
+				List.exists (fun v -> 
+					match v with 
+					| Neg (x) -> List.mem x env
+					| _ -> failwith "tried to introduce negation; negation component expected") 
+				(allNegs env)
 			| Var (x) -> false
 			| Neg (Neg (x)) -> 
 				isDerivable axioms x env
 			| Neg (x) -> 
 				existsFrame x False env || (* modus tollens below *)
-					List.exists (fun x -> 
-						match x with 
-						| Imp (a, b) -> List.mem (Neg (b)) env
+					List.exists (fun v -> 
+						match v with 
+						| Imp (x, y) -> List.mem (Neg (y)) env
 						| _ -> failwith "tried to check modus tollens; received component is not an Imp") 
 					(allImps env)
 			| Con (x, y) -> 
 				isDerivable axioms x env && isDerivable axioms y env
 			| Dis (x, y) -> 
+				(List.mem (Dis (y, x)) env) ||
 				isDerivable axioms x env || isDerivable axioms y env
 			| Bic (x, y) -> 
 				isDerivable axioms (Imp (x, y)) env && isDerivable axioms (Imp (y, x)) env
 			| Imp (x, y) -> 
 				existsFrame x y env 
-			| _ -> failwith "tried to check if component was introduced; received component is a frame" in 
+			| _ -> false in 
 
 		let rec isResultOfElimination (lst:component list) = 
 			(* checks if expression is obtained from connective elimination by traversing environment and trying to apply elimination rule to each of elements *)
 
 			let eliminatesConnective (comp:component) = 
 				(* tries to apply elimination rules to elements of environment *)
-
-				let envToString = String.concat ", " (List.map (fun x -> componentToString x) lst) in
-				let msg = "env: " ^ envToString ^ " || comp: " ^ (componentToString comp) ^ " || expr: " ^ (componentToString expr) ^ "\n\n"in
-
-				(print_string msg ); 
+				(print_string (debugMessage env comp expr)); 
 				match comp with 
 				| False -> true
-				| Con (x, y) -> x = expr || y = expr
-				| Imp (x, y) -> List.mem x env && y = expr
+				| Neg (Neg (x)) -> 
+					expr = x
+				| Neg (x) -> 
+					expr = False && List.mem x env
+				| Con (x, y) -> 
+					expr = x || expr = y
+				| Bic (x, y) -> 
+					(expr = x && List.mem y env) 						||
+					(expr = y && List.mem x env) 						||
+					(expr = Neg (x) && List.mem (Neg (y)) env) 			||
+					(expr = Neg (y) && List.mem (Neg (x)) env) 			||
+					(expr = Con (x, y) && List.mem (Dis (x, y)) env) 	||
+					(expr = Con (Neg (x), Neg (y)) && 
+						List.mem (Dis (Neg (x), Neg (y))) env)
+				| Imp (x, y) -> 
+					y = expr && List.mem x env 
 				| _ -> false in
 
 			match lst with 

@@ -17,22 +17,103 @@ p <=> p
 end.
 
 
-goal EQB: p => p
+goal DOUBLE_NEG_2: p <=> ~~p	
 proof
-[p: p];
-p <=> p
+	[p:
+	[~p: F];
+	~~p];
+	p => ~~p;
+	[~~p:
+	p];
+	~~p => p;
+	p <=> ~~p	    
 end.
 
 
-axiom: ~~(a /\ ~a) => (a /\ ~a) end.
-
-
-
-goal OR_2: p /\ q => q /\ p
+goal AND_2: ~(p /\ ~p)
 proof
-	[p /\ q:
- 	q;
- 	p;
- 	q /\ p];
-	p /\ q => q /\ p
+	[p /\ ~p:
+		p;
+		~p;
+		F
+	];
+	~(p /\ ~p)
+end.
+
+
+goal IFF_1: p <=> ~~p	
+proof
+	[p:
+		[~p: 
+			F
+		];
+	~~p
+	];
+	p => ~~p;
+	[~~p:
+		p
+	];
+	~~p => p;
+	p <=> ~~p	    
+end.
+
+
+goal IMP_I2: (p => ~p) => ~p 
+proof
+	[p => ~p:
+		[p: 
+			~p;
+			F
+		];
+		~p
+	];
+	(p => ~p) => ~p 
+end.
+
+
+goal FALSE_1: (p => ~p) => ~p 
+proof
+	[p => ~p:
+		[p: 
+			~p;
+			F
+		];
+		~p
+	];
+	(p => ~p) => ~p 
+end.
+
+
+
+goal FALSE_2: ~(p /\ ~p)
+proof
+	[p /\ ~p:
+		p;
+		~p;
+		F
+	];
+	~(p /\ ~p)
+end.
+
+
+goal FALSE_3: ~(p \/ q) => ~p /\ ~q
+proof
+	[~(p \/ q):
+		[p:
+			p;
+			p \/ q;
+			~(p \/ q);
+			F
+		];
+		[q:
+			q;
+			p \/ q;
+			~(p \/ q);
+			F
+		];
+		~p;
+		~q;
+		~p /\ ~q
+	];
+	~(p \/ q) => ~p /\ ~q
 end.
