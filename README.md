@@ -35,7 +35,14 @@ let () =
 ```
 
 ### Usage
-Type the following command to compile and run program with default tests
+
+Type following commands before testing program
+```sh
+opam switch 4.05.0 
+eval `opam config env`
+```
+
+To compile and run program with default tests just type
 ```sh
 $ make
 ```
