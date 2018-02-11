@@ -150,8 +150,6 @@ let rec isDerivable (axioms:component list) (expr:component) (env:component list
 						| Imp (x, y) -> List.mem (Neg (y)) env
 						| _ -> failwith "tried to check modus tollens; received component is not an Imp") 
 					(allImps env)
-			| Neg (Neg (x)) -> 
-				List.mem x env
 			| Con (x, y) -> 
 				isDerivable axioms x env && isDerivable axioms y env
 			| Dis (x, y) -> 
