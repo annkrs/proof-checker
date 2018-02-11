@@ -4,6 +4,7 @@ Find details in "Treść".
 
 ### Requirements
 OCaml
+
 [installation](https://ocaml.org/docs/install.html)
 
 ocamlfind
@@ -17,6 +18,7 @@ opam install menhir
 ```
 
 Core
+
 [installation](https://kwangyulseo.com/2014/03/04/installing-ocamlopamutopcore-library-on-ubuntu-saucy/)
 
 Put the following in your `.ocamlinit` file to use `Core`:
