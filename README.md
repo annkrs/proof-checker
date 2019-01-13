@@ -1,6 +1,7 @@
 # proof-checker
 
 Tool to validate correctness of proofs formulated in natural deduction. Implemented in OCaml
+
 Find details in "Treść".
 
 ### Requirements
